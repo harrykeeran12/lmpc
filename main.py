@@ -3,7 +3,6 @@ import ollama
 import typing
 import subprocess
 import streamlit as st
-from pypdf import PdfReader
 # Check if models are installed or not.
 try:
     # print("Installed models on local ollama instance:")
@@ -211,31 +210,40 @@ class MockPaperGenerator():
 
 # compileTeX("exam_1.tex")
 
-def createPaper(questionType:str, questionNo:int, totalMarks: int):
-    """Create a new paper."""
+def createPaper(questionType: str, questionNo: int, totalMarks: int):
+    """Creates a new instance of the mock paper generator class."""
     with st.status("Generating a mock paper..."):
         newPaper = MockPaperGenerator(
             questionType, QUESTIONNUMBER=questionNo, TOTALMARKS=totalMarks)
+
+
 if __name__ == "__main__":
-    st.title("Magister: an automated, paper generation tool.")
-    st.subheader("Installed models: ")
-    for i in INSTALLEDMODELS:
-        st.markdown(f"- {i}")
+    st.title("Chiron: an automated, paper generation tool, displayed in $ \\LaTeX $")
+    with st.container():
+        st.markdown("##### Installed models: ")
+        st.markdown(f"{",".join(INSTALLEDMODELS)}")
     with st.form("my_form"):
         questionTypeOption = st.selectbox(
-            "Select the type of question from the dropdown.", ALLQUESTIONTYPES.keys())
+            "Select the **type of question** from the dropdown menu.", ALLQUESTIONTYPES.keys())
         questionNumber = st.number_input(
-            "How many questions should there be?", min_value = 2, max_value = 10)
+            "How many **questions** should there be?", min_value=2, max_value=10)
         markNumber = st.number_input(
-            "Select the total number of marks that the questions should come up to.", min_value = 3, max_value = 100)
+            "Select the total number of marks that the questions should come up to.", min_value=10, max_value=100, step=10)
+        notefile = st.file_uploader(
+            label="Upload notes here.")
+        # toggleNote = st.toggle("Add notes as file(on) or as a path name(off)?")
+        # if toggleNote == True:
+        #     notefile = st.file_uploader(
+        #         label="Upload notes here.", disabled=True)
+        # else:
+        #     filenameField = st.text_input(
+        #         label="Type in the name of the notes file here.", value="notes.txt", placeholder="notes.txt")
+        # if filenameField[-4:].strip() not in [".md, .txt"]:
+        #     st.toast(
+        #         f"A problem has been encountered. {filenameField[-4:]}", icon="❌")
+
         submitted = st.form_submit_button("Submit")
     if submitted:
         createPaper(questionTypeOption, questionNumber, markNumber)
-        pdf = PdfReader("exam_1.pdf")
-
         st.download_button(label="Download PDF.", data=open("exam_1.pdf", "rb"),
                            mime="text/pdf", file_name="exam_1.pdf")
-
-
-    
-        

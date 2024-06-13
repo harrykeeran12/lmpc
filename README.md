@@ -1,5 +1,5 @@
-# lmpc
-A repository housing a mock paper creator program powered by an LLM. (LLM mock paper creator). The LLM uses *few shot learning*- more information about this learning style can be found [here.](https://www.promptingguide.ai/techniques/fewshot). 
+# chiron
+A repository housing a mock paper creator program powered by an LLM. (used to be called LLM mock paper creator). The LLM uses *few shot learning*- more information about this learning style can be found [here.](https://www.promptingguide.ai/techniques/fewshot). 
 The LLM used in development was `phi-3:mini` due to its small size. My personal opinion is that small language models could be very useful. 
 
 The aim of this project is to generate mock papers from notes, and render them as a PDF for printing. 
