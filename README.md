@@ -16,8 +16,10 @@ Ollama is used in order to host a local LLM on the development machine.
   sudo tlmgr install exam
   ```
   which uses `tlmgr` (the TUG package manager) to install `exam.cls`. 
+  To compile the document, `pdflatex` is used, but this can be changed + extended. 
 
 - The Python packages required can be installed using conda. You will need to have `ollama` on your system, and up and running using the `ollama serve` command. 
+- For the web interface, `streamlit` is required. The web application can be run using `streamlit run main.py`. 
 
 
 
