@@ -7,6 +7,7 @@ The idea for this project came about whilst I was studying for my exams, and gre
 Ollama is used in order to host a local LLM on the development machine.
 
 
+
 ## For development:
 
 - You will need to set up a LaTeX distribution for this. 
