@@ -74,6 +74,5 @@ if __name__ == "__main__":
     if submitted:
         createPaper(st.session_state.questionType,
                     st.session_state.questionNumber, st.session_state.markNumber)
-        # time.sleep(1000)
         st.download_button(label="Download PDF.", data=open("exam_1.pdf", "rb"),
                            mime="text/pdf", file_name="exam_1.pdf")
