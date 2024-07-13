@@ -23,7 +23,9 @@ Ollama is used in order to host a local LLM on the development machine.
 - For the web interface, `streamlit` is required. The web application can be run using `streamlit run main.py`. 
 
 
+## Tests:
 
+You can run the tests for the program using `pytest tests -q`. Note that pytest must be installed.
 ## TODO: 
 
 - [ ] Generate clear options for multiple choice questions. 

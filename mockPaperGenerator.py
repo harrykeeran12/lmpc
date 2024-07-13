@@ -4,9 +4,9 @@ import ollama
 
 
 class MockPaperGenerator():
-    """This class encapsulates all the mock paper items that need to be included. Checks are run to make sure the data can be validated.
+    """This abstract class houses the mock paper items that need to be included. Checks are run to make sure the data can be validated.
     Parameters: 
-    QUESTIONTYPE: str - a string(default is short)
+    QUESTIONTYPE: str - a string.
     MODELNAME: str - A model name supported by Ollama.
     NOTEFILE: str - A path to where the notes are stored, so that they can all be read beforehand.  
     QUESTIONNUMBER: int - The number of questions.
@@ -45,7 +45,7 @@ class MockPaperGenerator():
         # self.compileTeX("exam_1.tex")
 
     def rewrite(self) -> str:
-        """Rewrite the notes."""
+        """A function that takes in the current note file, and rewrites the notes. """
         NOTESREWRITE = f"Instruct: Rewrite, reorganise and summmarise these notes below into one simple clear paragraph. Make sentences simple. Do not add any other information. Do not write the questions. Write each note in a definition-example-explanation structure. Make sure that the data is all in plain-text. \n \n {
             self.NOTES
         }"
@@ -60,7 +60,7 @@ class MockPaperGenerator():
         print("Rewrote notes.")
 
     def prompt(self):
-        """ The system prompt should be designed to use few-shot learning in order to generate the most accurate questions for the source material. """
+        """ A function that prompts the model chosen, using few-shot learning in order to generate the most accurate questions for the source material. """
 
         self.SYSTEMPROMPT = f"Instruct: Generate {self.QUESTIONNUMBER} questions, in a list. Each question should be written as a string, and should be separated by one new line character \\n each. Questions should not be numbered. \nFor example, for 4 questions about famous authors would be generated as\n \"Which author beginning with the letter M contributed the most to American literary fiction?\"\\n\"When was this author born?\"\\n\"Which famous comet was associated with this author?\"\\n\"Did this author have a pen-name?\"\n "
 
@@ -77,7 +77,7 @@ class MockPaperGenerator():
         print("Created prompt.")
 
     def generate(self):
-        """Uses the specified MODELNAME to generate the questions. """
+        """Uses the specified MODELNAME and SYSTEMPROMPT to generate the questions. """
         generation = ollama.generate(
             model=self.MODELNAME, prompt=self.SYSTEMPROMPT)
         # print(generation["response"])
@@ -119,7 +119,7 @@ class MockPaperGenerator():
         #         print(incorrectChoiceGeneration["response"].split("\\n"))
 
     def texTemplate(self):
-        """ Add generated questions to a tex file."""
+        """A function that adds the newly generated questions to a tex file."""
         MARK = self.TOTALMARKS // self.QUESTIONNUMBER
         print("Compiling the tex template.")
         try:
