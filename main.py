@@ -4,7 +4,9 @@ import ollama
 import subprocess
 import streamlit as st
 from questionType import QuestionType
-from mockPaperGenerator import MockPaperGenerator
+from src.shortMockPaperGenerator import ShortMockPaperGenerator
+from src.longMockPaperGenerator import LongMockPaperGenerator
+
 # Check if models are installed or not.
 try:
     # print("Installed models on local ollama instance:")
@@ -13,9 +15,11 @@ try:
     for modelName in ollama.list()["models"]:
         # print(modelName["name"])
         INSTALLEDMODELS.append(modelName["name"])
+    if len(INSTALLEDMODELS) == 0:
+        INSTALLEDMODELS.append("There are no models installed on your system. Use ollama pull [modelname] to add a model.")
 except ConnectError:
     raise Exception(
-        "ollama server is not online. \nUse ollama serve to run the ollama daemon.")
+        "The ollama server is not online. \nUse ollama serve to run the ollama daemon.")
 
 
 short = QuestionType(
@@ -28,33 +32,38 @@ ALLQUESTIONTYPES: dict[str, QuestionType] = {}
 
 ALLQUESTIONTYPES[short.name] = short
 ALLQUESTIONTYPES[long.name] = long
-ALLQUESTIONTYPES[mcq.name] = mcq
-
-
 
 
 def createPaper(questionType: str, questionNo: int, totalMarks: int):
     """Creates a new instance of the mock paper generator class."""
     with st.status("Generating a mock paper...") as status:
-        newPaper = MockPaperGenerator(
-            QUESTIONTYPE=questionType, QUESTIONNUMBER=questionNo, TOTALMARKS=totalMarks)
+        if questionType == "short":
+            newPaper = ShortMockPaperGenerator(
+                QUESTIONNUMBER=questionNo, TOTALMARKS=totalMarks)
+        elif questionType == "long":
+            newPaper = LongMockPaperGenerator(
+                QUESTIONNUMBER=questionNo, TOTALMARKS=totalMarks)
+        # newPaper = MockPaperGenerator(
+        #     QUESTIONTYPE=questionType, QUESTIONNUMBER=questionNo, TOTALMARKS=totalMarks)
+        ticOne = time.perf_counter()
         newPaper.prompt()
-        
         newPaper.generate()
+        ticTwo = time.perf_counter()
         status.update(label="Prompt generated.",
-                         state="running", expanded=False)
+                      state="running", expanded=False)
         newPaper.texTemplate()
         status.update(label="Compiling .pdf.",
                       state="running", expanded=False)
         newPaper.compileTeX("exam_1.tex")
-        status.update(label="Compiled .pdf.",
-                         state="complete", expanded=True)
+        ticThree = time.perf_counter()
+        status.update(label=f"Generated prompt in {ticTwo - ticOne:0.4f} seconds. Compiled .pdf in {ticThree - ticTwo:0.4f} seconds. ",
+                      state="complete", expanded=True)
 
 
 if __name__ == "__main__":
     st.title("Chiron: an automated, paper generation tool, displayed in $ \\LaTeX $")
     st.markdown("##### Installed models: ")
-    st.markdown(f"{",".join(INSTALLEDMODELS)}")
+    st.markdown(f"{"".join(INSTALLEDMODELS)}")
     st.divider()
     col1, col2 = st.columns([1, 1.5])
     questionTypeOption = st.selectbox(
