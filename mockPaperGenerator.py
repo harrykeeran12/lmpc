@@ -31,6 +31,7 @@ class MockPaperGenerator:
         self.NOTEFILE = NOTEFILE
         self.QUESTIONNUMBER = QUESTIONNUMBER
         self.TOTALMARKS = TOTALMARKS
+        self.STRIKES = 0
         print(
             f"Creating a new {QUESTIONTYPE} paper using {MODELNAME}, from notes located at {NOTEFILE}, with {QUESTIONNUMBER} questions and {TOTALMARKS} total marks."
         )
@@ -118,11 +119,19 @@ class MockPaperGenerator:
             print(f"Question [{q + 1}] {self.generated_questions[q]}")
 
         if len(self.generated_questions) != self.QUESTIONNUMBER:
-            raise Exception(
-                f"""Problem with generated question amount: expected {
-                    self.QUESTIONNUMBER
-                }, got {len(self.generated_questions)}"""
-            )
+            if self.STRIKES < 3:
+                print(
+                    f"""Problem with generated question amount: expected {
+                        self.QUESTIONNUMBER
+                    }, got {len(self.generated_questions)}"""
+                )
+                self.generate()
+                self.SYSTEMPROMPT += f"Do not generate the wrong number of questions like this: {''.join(self.generated_questions)}"
+                self.STRIKES += 1
+            else:
+                raise Exception(
+                    "Repeated generation of questions did not apply correct prompt formatting."
+                )
 
         print("Generated questions.")
 
