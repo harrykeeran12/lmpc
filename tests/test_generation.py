@@ -10,6 +10,7 @@ def test_ollamaserver():
     except Exception as e:
         assert e == ConnectError
 
+
 def test_checkinstalledmodels():
     """Check if at least one model is installed with ollama."""
     try:
